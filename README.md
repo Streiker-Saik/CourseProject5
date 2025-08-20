@@ -25,43 +25,43 @@ python --version
 
 
 ## Установка Poetry:
-Если у вас еще не установлен Poetry, вы можете установить его, выполнив следующую команду  
+- Если у вас еще не установлен Poetry, вы можете установить его, выполнив следующую команду
     ```bash
     curl -sSL https://install.python-poetry.org | python3 -
     ```
-Проверить Poetry добавлен в ваш PATH.
-```bash
-poetry --version
-```
+- Проверить Poetry добавлен в ваш PATH.
+    ```bash
+    poetry --version
+    ```
 
 [<- на начало](#содержание)
 
 
 ## Установка:
 - Клонируйте репозиторий:
-```bash
-git clone git@github.com:Streiker-Saik/CourseProject5.git
-```
+    ```bash
+    git clone git@github.com:Streiker-Saik/CourseProject5.git
+    ```
 - Перейдите в директорию проекта:
-```
-cd CourseProject_4
-```
+    ```
+    cd CourseProject_4
+    ```
 ### При использовании PIP:
 - Активируйте виртуальное окружение
-```
-python -m venv <имя_вашего окружения>
-<имя_вашего_окружения>\Scripts\activate
-```
+    ```
+    python -m venv <имя_вашего окружения>
+    <имя_вашего_окружения>\Scripts\activate
+    ```
 - Установите зависимости
-```
-pip install -r requirements.txt
-```
+    ```bash
+    pip install -r requirements.txt
+    ```
 ### При использование POETRY:
 - Активируйте виртуальное окружение
-```bash
-poetry shell
-```
+    ```bash
+    poetry shell
+    ```
 - Установите необходимые зависимости:
-```bash
-poetry install
-```
+    ```bash
+    poetry install
+    ```
