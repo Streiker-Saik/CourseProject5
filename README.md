@@ -10,9 +10,11 @@
 - [Запуск проекта](#запуск-проекта)
 - [Кастомные команды](#кастомные-команды)
 - [Структура проекта](#структура-проекта)
-- [Приложение chat](#приложение-chat)
-  - [Models chat](#models-chat)
+- [Приложение chats](#приложение-chats)
+  - [Models chats](#models-chats)
     - [Habit](#habit)
+  - [Serializers chats](#serializers-chats)
+    - [HabitSerializer](#habitserializer)
 - [Приложение users](#приложение-users)
   - [Admin users](#admin-users)
   - [Models users](#models-users)
@@ -142,6 +144,21 @@ DjangoREST/
 |   ├── settings.py # настройки проекта
 |   ├── urls.py # маршрутизация проета
 |   └── wsgi.py
+├── chats/ # приложение отправки сообщений
+|   ├── migrations/ # пакет миграции моделей
+|   |   ├── 0001_initial.py
+|   |   ├── ...
+|   |   └── __init__.py
+|   ├── admin.py 
+|   ├── apps.py
+|   ├── models.py # модели БД
+|   ├── paginators.py # права доступа
+|   ├── seriazers.py # сериализаторы приложения
+|   ├── tasks # отложенные задачи
+|   ├── tests.py 
+|   ├── urls.py # маршрутизация приложения
+|   ├── validators # валидаторы сериализаторов
+|   └── views.py # конструктор контроллеров
 ├── users/ # приложение аутефикации
 |   ├── management/
 |   |   └── commands
@@ -156,9 +173,8 @@ DjangoREST/
 |   ├── admin.py 
 |   ├── apps.py
 |   ├── models.py # модели БД
-|   ├── permissions.py # правв доступа
+|   ├── permissions.py # права доступа
 |   ├── seriazers.py # сериализаторы приложения
-|   ├── services.py # сервисные функции 
 |   ├── tests.py 
 |   ├── urls.py # маршрутизация приложения
 |   └── views.py # конструктор контроллеров
@@ -175,6 +191,44 @@ DjangoREST/
 
 ---
 
+
+# Приложение chats:
+## Models chats:
+### Habit:
+Представление привычки.
+- Атрибуты:
+  - owner (ForeignKey): Создатель привычки
+  - place (str): Место привычки
+  - time (datetime): Дата и время выполнения привычки
+  - action (str): Действие привычки
+  - is_pleasant (bool): Признак приятной привычки
+  - related_habit (ForeignKey): Привычка, которая связана с другой привычкой
+  - periodicity (int): Периодичность выполнения привычки для напоминания в днях (по умолчанию ежедневная)
+  - reward (str): Вознаграждение за привычку
+  - time_to_complete (DurationField): Время на выполнение.
+  - is_public (bool): Признак, можно ли опубликовать привычку.
+
+[<- на начало](#содержание)
+
+---
+## Serializers chats:
+### HabitSerializer:
+Сериализатор для модели Habit
+- Отображаются поля:
+  - id(int): Уникальный идентификатор привычки.
+  - owner(ForeignKey): Создатель привычки.
+  - place (str): Место привычки.
+  - time (datetime): Дата и время выполнения привычки
+  - action (str): Действие привычки
+  - is_pleasant (bool): Признак приятной привычки
+  - related_habit (ForeignKey): Привычка, которая связана с другой привычкой
+  - periodicity (int): Периодичность выполнения привычки для напоминания в днях (по умолчанию ежедневная)
+  - reward (str): Вознаграждение за привычку
+  - time_to_complete (DurationField): Время на выполнение.
+  - is_public (bool): Признак, можно ли опубликовать привычку.
+
+
+---
 # Приложение users:
 ## Admin users
 ### CustomUserAdmin
