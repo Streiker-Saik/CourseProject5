@@ -33,8 +33,10 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "drf_yasg",
+    "corsheaders",
 
     "users",
+    "chats",
 ]
 
 MIDDLEWARE = [
@@ -141,3 +143,13 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.User"
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",
+    "http://127.0.0.1:9000",
+]
+CSRF_TRUSTED_ORIGINS = [
+    "https://read-and-write.example.com",
+]
+CORS_ALLOW_ALL_ORIGINS = False
