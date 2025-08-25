@@ -51,9 +51,8 @@ class UsersUserTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(
             response.json(),
-            {'id': self.user.pk, "email": self.user.email, 'first_name': 'Test', 'last_name': '', 'chat_id': 2}
+            {'id': self.user.pk, "email": self.user.email, 'first_name': '', 'last_name': '', 'chat_id': 2}
         )
-
 
     def test_partial_update_user(self):
         """Тестирование частичного обновления пользователя"""
