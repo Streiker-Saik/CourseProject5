@@ -13,8 +13,12 @@
 - [Приложение chats](#приложение-chats)
   - [Models chats](#models-chats)
     - [Habit](#habit)
+  - [Paginators chats](#paginators-chats)
+    - [ChatsPaginator](#chatspaginator)
   - [Serializers chats](#serializers-chats)
+    - [HabitCreateSerializer](#habitcreateserializer)
     - [HabitSerializer](#habitserializer)
+  - [Validators chats](#validators-chats)
 - [Приложение users](#приложение-users)
   - [Admin users](#admin-users)
   - [Models users](#models-users)
@@ -120,16 +124,20 @@ python --version
 ---
 ## Кастомные команды
 ### csu
-Команда для создания суперпользователя по ключам email и password.
-Если не указано, то: email='admin@example.com', password='admin'.
+Команда для создания суперпользователя по ключам email, password и chat_id.
+Если не указано, то: email='admin@example.com', password='admin', chat_id=1.
 ```bash
 python manage.py csu
 ```
 или
 ```
-python manage.py csu --email ввести_адрес_почты --password ввести_пароль
+python manage.py csu --email ввести_адрес_почты --password ввести_пароль --chat_id ввести_id_телеграмма
 ```
-
+### cu
+Команда для создания пользователя по ключам email, password и chat_id.
+```
+python manage.py cu --email ввести_адрес_почты --password ввести_пароль --chat_id ввести_id_телеграмма
+```
 
 [<- на начало](#содержание)
 
@@ -211,7 +219,19 @@ DjangoREST/
 [<- на начало](#содержание)
 
 ---
+## Paginators chats:
+### ChatsPaginator:
+Пагинатор для приложения chats
+К-во элементов 5 (максимум 10) на странице
+
+[<- на начало](#содержание)
+
+---
 ## Serializers chats:
+### HabitCreateSerializer:
+Сериализатор для создания модели Habit
+- Исключены поля:
+  - owner(ForeignKey): Создатель привычки.
 ### HabitSerializer:
 Сериализатор для модели Habit
 - Отображаются поля:
@@ -227,6 +247,28 @@ DjangoREST/
   - time_to_complete (DurationField): Время на выполнение.
   - is_public (bool): Признак, можно ли опубликовать привычку.
 
+[<- на начало](#содержание)
+
+---
+## Validators chats:
+### RelatedOrRewardValidator:
+Валидатор проверки одновременно связанная привычка и вознаграждение
+ValidationError: Если в заполнено сразу связанная привычка и вознаграждение
+### TimeToCompleteValidator:
+Валидатор проверки времени на выполнение.
+ValidationError: Если время превышает 120 секунд
+### RelatedHabitValidator:
+Валидатор проверки связанные привычки
+ValidationError: Если связанная привычка не является приятной
+### IsPleasantValidator:
+Валидатор проверки приятной привычки.
+ValidationError: Если у приятной привычки есть связанная привычка
+ValidationError: Если у приятной привычки есть вознаграждение
+### PeriodicityValidator:
+Валидатор периода выполнения привычки.
+ValidationError: Если период выполнения больше 7 дней
+
+[<- на начало](#содержание)
 
 ---
 # Приложение users:
