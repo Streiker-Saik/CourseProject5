@@ -1,9 +1,8 @@
 from django.urls import path
 
-from chats.views import HabitCreateAPIView, HabitListAPIView, HabitRetrieveAPIView, HabitUpdateAPIView, \
-    HabitDestroyAPIView, PublicHabitListAPIView
+from chats.views import (HabitCreateAPIView, HabitDestroyAPIView, HabitListAPIView, HabitRetrieveAPIView,
+                         HabitUpdateAPIView, PublicHabitListAPIView)
 from users.apps import UsersConfig
-
 
 app_name = UsersConfig.name
 

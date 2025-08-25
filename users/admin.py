@@ -25,4 +25,7 @@ class CustomUserAdmin(admin.ModelAdmin):
         "is_staff",
         "is_active",
     )
-    search_fields = ("email", "chat_id",)
+    search_fields = (
+        "email",
+        "chat_id",
+    )

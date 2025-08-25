@@ -16,7 +16,13 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("id", "email", "first_name", "last_name", "chat_id",)
+        fields = (
+            "id",
+            "email",
+            "first_name",
+            "last_name",
+            "chat_id",
+        )
 
 
 class UserCreateSerializer(ModelSerializer):
@@ -41,6 +47,3 @@ class UserCreateSerializer(ModelSerializer):
         user.set_password(validated_data.pop("password"))
         user.save()
         return user
-
-
-

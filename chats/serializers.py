@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
 from chats.models import Habit
-from chats.validators import RelatedOrRewardValidator, TimeToCompleteValidator, RelatedHabitValidator, \
-    IsPleasantValidator, PeriodicityValidator
+from chats.validators import (IsPleasantValidator, PeriodicityValidator, RelatedHabitValidator,
+                              RelatedOrRewardValidator, TimeToCompleteValidator)
 
 
 class HabitSerializer(serializers.ModelSerializer):
@@ -30,8 +30,9 @@ class HabitSerializer(serializers.ModelSerializer):
             TimeToCompleteValidator(time_to_complete_field="time_to_complete"),
             RelatedHabitValidator(related_field="related_habit"),
             IsPleasantValidator(is_pleasant_field="is_pleasant"),
-            PeriodicityValidator(periodicity_field="periodicity")
+            PeriodicityValidator(periodicity_field="periodicity"),
         ]
+
 
 class HabitCreateSerializer(serializers.ModelSerializer):
     """
@@ -48,5 +49,5 @@ class HabitCreateSerializer(serializers.ModelSerializer):
             TimeToCompleteValidator(time_to_complete_field="time_to_complete"),
             RelatedHabitValidator(related_field="related_habit"),
             IsPleasantValidator(is_pleasant_field="is_pleasant"),
-            PeriodicityValidator(periodicity_field="periodicity")
+            PeriodicityValidator(periodicity_field="periodicity"),
         ]

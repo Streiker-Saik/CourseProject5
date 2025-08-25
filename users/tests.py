@@ -1,7 +1,7 @@
 from django.db import connection
 from rest_framework import status
-
 from rest_framework.test import APITestCase
+
 from users.models import User
 
 
@@ -29,10 +29,15 @@ class UsersUserTestCase(APITestCase):
         self.assertEqual(
             response.json(),
             [
-                {'id': self.admin_user.pk, "email": self.admin_user.email, 'first_name': '', 'last_name': '',
-                 'chat_id': 1},
-                {'id': self.user.pk, "email": self.user.email, 'first_name': '', 'last_name': '', 'chat_id': 2}
-            ]
+                {
+                    "id": self.admin_user.pk,
+                    "email": self.admin_user.email,
+                    "first_name": "",
+                    "last_name": "",
+                    "chat_id": 1,
+                },
+                {"id": self.user.pk, "email": self.user.email, "first_name": "", "last_name": "", "chat_id": 2},
+            ],
         )
 
     def test_create_user(self):
@@ -51,7 +56,7 @@ class UsersUserTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(
             response.json(),
-            {'id': self.user.pk, "email": self.user.email, 'first_name': '', 'last_name': '', 'chat_id': 2}
+            {"id": self.user.pk, "email": self.user.email, "first_name": "", "last_name": "", "chat_id": 2},
         )
 
     def test_partial_update_user(self):
@@ -68,13 +73,13 @@ class UsersUserTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(
             response.json(),
-            {'id': self.user.pk, "email": self.user.email, 'first_name': 'Test', 'last_name': '', 'chat_id': 2}
+            {"id": self.user.pk, "email": self.user.email, "first_name": "Test", "last_name": "", "chat_id": 2},
         )
 
     def test_update_user(self):
         """Тестирование обновления пользователя"""
 
-        data = {"email": self.user.email, 'first_name': 'Test', 'chat_id': 123}
+        data = {"email": self.user.email, "first_name": "Test", "chat_id": 123}
 
         self.client.force_authenticate(user=self.admin_user)
         response = self.client.put(f"/users/{self.user.pk}/update/", data=data)
@@ -85,7 +90,7 @@ class UsersUserTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(
             response.json(),
-            {'id': self.user.pk, "email": self.user.email, 'first_name': 'Test', 'last_name': '', 'chat_id': 123}
+            {"id": self.user.pk, "email": self.user.email, "first_name": "Test", "last_name": "", "chat_id": 123},
         )
 
     def test_destroy_user(self):
@@ -115,5 +120,3 @@ class UsersUserTestCase(APITestCase):
 
         response = self.client.delete(f"/users/{self.user.pk}/delete/")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-

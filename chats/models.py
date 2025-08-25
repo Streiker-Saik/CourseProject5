@@ -24,15 +24,13 @@ class Habit(models.Model):
         models.CASCADE,
         related_name="habits",
         verbose_name="Создатель привычки",
-        help_text="Введите ID создателя привычки (пользователя)"
+        help_text="Введите ID создателя привычки (пользователя)",
     )
     place = models.CharField(max_length=255, verbose_name="Место", help_text="Введите место выполнения")
     time = models.DateTimeField(verbose_name="Время", help_text="Введите время начала")
     action = models.CharField(max_length=255, verbose_name="Действие", help_text="Введите действия привычки")
     is_pleasant = models.BooleanField(
-        default=False,
-        verbose_name="Признак приятной привычки",
-        help_text="Отметьте, если привычка является приятной"
+        default=False, verbose_name="Признак приятной привычки", help_text="Отметьте, если привычка является приятной"
     )
     related_habit = models.ForeignKey(
         "self",
@@ -41,28 +39,25 @@ class Habit(models.Model):
         blank=True,
         null=True,
         verbose_name="Связанная привычка",
-        help_text="Введите ID связанной привычки, если она есть"
+        help_text="Введите ID связанной привычки, если она есть",
     )
     periodicity = models.PositiveIntegerField(
         default=1,
         verbose_name="Периодичность выполнения",
-        help_text="Введите периодичность выполнения привычки в днях"
+        help_text="Введите периодичность выполнения привычки в днях",
     )
     reward = models.CharField(
         max_length=255,
         blank=True,
         null=True,
         verbose_name="Вознаграждение",
-        help_text="Введите вознаграждение за выполнение привычки"
+        help_text="Введите вознаграждение за выполнение привычки",
     )
     time_to_complete = models.DurationField(
-        verbose_name="Время на выполнение",
-        help_text="Введите приблизительное время на выполнение привычки"
+        verbose_name="Время на выполнение", help_text="Введите приблизительное время на выполнение привычки"
     )
     is_public = models.BooleanField(
-        default=False,
-        verbose_name="Признак публичности",
-        help_text="Отметьте, если привычку можно публиковать"
+        default=False, verbose_name="Признак публичности", help_text="Отметьте, если привычку можно публиковать"
     )
 
     def __str__(self) -> str:

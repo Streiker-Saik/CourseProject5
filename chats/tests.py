@@ -1,7 +1,7 @@
 from django.db import connection
 from rest_framework import status
-
 from rest_framework.test import APITestCase
+
 from chats.models import Habit
 from users.models import User
 
@@ -24,7 +24,7 @@ class ChatsHabitTestCase(APITestCase):
             is_pleasant=True,
             periodicity=1,
             time_to_complete="00:01:30",
-            is_public=True
+            is_public=True,
         )
         self.habit_and_related_habit = Habit.objects.create(
             owner=self.user,
@@ -34,7 +34,7 @@ class ChatsHabitTestCase(APITestCase):
             related_habit=self.habit_pleasant,
             periodicity=1,
             time_to_complete="00:02:00",
-            is_public=True
+            is_public=True,
         )
         self.habit_and_reward = Habit.objects.create(
             owner=self.user,
@@ -82,10 +82,10 @@ class ChatsHabitTestCase(APITestCase):
                         "periodicity": 1,
                         "reward": None,
                         "time_to_complete": "00:02:00",
-                        "is_public": True
+                        "is_public": True,
                     },
                 ],
-            }
+            },
         )
 
     def test_list_habit_user(self) -> None:
@@ -124,7 +124,7 @@ class ChatsHabitTestCase(APITestCase):
                         "periodicity": 1,
                         "reward": None,
                         "time_to_complete": "00:02:00",
-                        "is_public": True
+                        "is_public": True,
                     },
                     {
                         "id": self.habit_and_reward.pk,
@@ -137,10 +137,10 @@ class ChatsHabitTestCase(APITestCase):
                         "periodicity": 1,
                         "reward": "Чаша любимого супа на обед",
                         "time_to_complete": "00:01:00",
-                        "is_public": False
+                        "is_public": False,
                     },
-                ]
-            }
+                ],
+            },
         )
 
     def test_create_habit(self) -> None:
@@ -152,7 +152,7 @@ class ChatsHabitTestCase(APITestCase):
             "is_pleasant": True,
             "periodicity": 1,
             "time_to_complete": "00:01:00",
-            "owner": self.user.pk
+            "owner": self.user.pk,
         }
         response = self.client.post("/chats/habits/create/", data=data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -169,7 +169,7 @@ class ChatsHabitTestCase(APITestCase):
                 "periodicity": 1,
                 "reward": None,
                 "time_to_complete": "00:01:00",
-                "is_public": False
+                "is_public": False,
             },
         )
         habit = Habit.objects.get(id=latest_habit.pk)
@@ -331,6 +331,7 @@ class ChatsHabitTestCase(APITestCase):
             response.data.get("non_field_errors"),
         )
 
+
 class PermChatsHabitTestCase(APITestCase):
 
     def setUp(self):
@@ -349,7 +350,7 @@ class PermChatsHabitTestCase(APITestCase):
             is_pleasant=True,
             periodicity=1,
             time_to_complete="00:01:30",
-            is_public=False
+            is_public=False,
         )
 
     def test_not_authenticated(self) -> None:

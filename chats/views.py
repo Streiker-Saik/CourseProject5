@@ -1,11 +1,11 @@
 from django.db.models import QuerySet
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from chats.models import Habit
 from chats.paginators import ChatsPaginator
-from chats.serializers import HabitSerializer, HabitCreateSerializer
+from chats.serializers import HabitCreateSerializer, HabitSerializer
 from users.permissions import IsOwner
 
 
@@ -20,7 +20,7 @@ class HabitListAPIView(ListAPIView):
     serializer_class = HabitSerializer
     pagination_class = ChatsPaginator
 
-    @swagger_auto_schema(operation_id="habits_list")
+    @swagger_auto_schema(operation_id="habits_user_list")
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
@@ -31,7 +31,7 @@ class HabitListAPIView(ListAPIView):
         """
 
         user = self.request.user
-        return Habit.objects.filter(owner=user).order_by('id')
+        return Habit.objects.filter(owner=user).order_by("id")
 
 
 class PublicHabitListAPIView(ListAPIView):
@@ -40,10 +40,10 @@ class PublicHabitListAPIView(ListAPIView):
     """
 
     serializer_class = HabitSerializer
-    queryset = Habit.objects.filter(is_public=True).order_by('id')
+    queryset = Habit.objects.filter(is_public=True).order_by("id")
     pagination_class = ChatsPaginator
 
-    @swagger_auto_schema(operation_id="habits_list")
+    @swagger_auto_schema(operation_id="habits_public_list")
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 

@@ -16,8 +16,7 @@ class User(AbstractUser):
     username = None
     email = models.EmailField(unique=True, verbose_name="Email")
     chat_id = models.IntegerField(
-        verbose_name="ID пользователя",
-        help_text="Введите свой ID пользователя в телеграмме"
+        verbose_name="ID пользователя", help_text="Введите свой ID пользователя в телеграмме"
     )
 
     USERNAME_FIELD = "email"

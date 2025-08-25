@@ -1,6 +1,6 @@
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from rest_framework.generics import CreateAPIView, DestroyAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 
 from users.models import User
 from users.permissions import IsProfileOwner

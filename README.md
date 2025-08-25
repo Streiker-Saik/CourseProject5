@@ -11,6 +11,7 @@
 - [Кастомные команды](#кастомные-команды)
 - [Структура проекта](#структура-проекта)
 - [Приложение chats](#приложение-chats)
+  - [Admin chats]
   - [Models chats](#models-chats)
     - [Habit](#habit)
   - [Paginators chats](#paginators-chats)
@@ -19,6 +20,7 @@
     - [HabitCreateSerializer](#habitcreateserializer)
     - [HabitSerializer](#habitserializer)
   - [Validators chats](#validators-chats)
+  - [Views chats](#views-chats)
 - [Приложение users](#приложение-users)
   - [Admin users](#admin-users)
   - [Models users](#models-users)
@@ -201,6 +203,18 @@ DjangoREST/
 
 
 # Приложение chats:
+## Admin chats:
+### HabitAdmin
+Класс для работы администратора с привычками
+- Атрибуты:
+  - ordering - сортировка: владельцу
+  - list_filter - фильтрация: приятная привычка, публичная
+  - list_display - выводит на экран: владелец, признак приятной, связанная привычка, вознаграждение, публичная
+  - search_fields - поиск по: владельцу
+  
+[<- на начало](#содержание)
+
+---
 ## Models chats:
 ### Habit:
 Представление привычки.
