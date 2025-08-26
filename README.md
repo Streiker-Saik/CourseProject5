@@ -11,7 +11,7 @@
 - [Кастомные команды](#кастомные-команды)
 - [Структура проекта](#структура-проекта)
 - [Приложение chats](#приложение-chats)
-  - [Admin chats]
+  - [Admin chats](#admin-chats)
   - [Models chats](#models-chats)
     - [Habit](#habit)
   - [Paginators chats](#paginators-chats)
@@ -19,17 +19,40 @@
   - [Serializers chats](#serializers-chats)
     - [HabitCreateSerializer](#habitcreateserializer)
     - [HabitSerializer](#habitserializer)
+  - [Services chats](#services-chats)
+    - [TelegramService](#telegramservice)
+  - [Tasks chats](#tasks-chats)
+  - [Urls chats](#urls-chats)
   - [Validators chats](#validators-chats)
+    - [RelatedOrRewardValidator](#relatedorrewardvalidator)
+    - [TimeToCompleteValidator](#timetocompletevalidator)
+    - [RelatedHabitValidator](#relatedhabitvalidator)
+    - [IsPleasantValidator](#ispleasantvalidator)
+    - [PeriodicityValidator](#periodicityvalidator)
   - [Views chats](#views-chats)
+    - [HabitListAPIView](#habitlistapiview)
+    - [PublicHabitListAPIView](#publichabitlistapiview)
+    - [HabitCreateAPIView](#habitcreateapiview)
+    - [HabitRetrieveAPIView](#habitretrieveapiview)
+    - [HabitUpdateAPIView](#habitupdateapiview)
+    - [HabitDestroyAPIView](#habitdestroyapiview)
 - [Приложение users](#приложение-users)
   - [Admin users](#admin-users)
   - [Models users](#models-users)
     - [User](#user)
   - [Permissions users](#permissions-users)
+    - [IsOwner](#isowner)
+    - [IsProfileOwner](#isprofileowner)
   - [Serializers users](#serializers-users)
+    - [UserSerializer](#userserializer)
+    - [UserCreateSerializer](#usercreateserializer)
   - [Urls user](#urls-users)
   - [Views user](#views-users)
-
+    - [UserListAPIView](#userlistapiview)
+    - [UserCreateAPIView](#usercreateapiview)
+    - [UserRetrieveAPIView](#userretrieveapiview)
+    - [UserUpdateAPIView](#userupdateapiview)
+    - [UserDestroyAPIView](#userdestroyapiview)
    
 ## Описание:
 
@@ -116,6 +139,27 @@ python --version
 
 ---
 ## Запуск проекта:
+- Запуск обработчика очереди (worker)
+  - Linux/Mac
+    ```bash
+    celery -A config worker -l INFO
+    ```
+  - Windows
+    ```bash
+    celery -A config worker -l INFO -P eventlet
+    ```
+- Запуск планировщика (beat). **Выполняется вместе с Celery worker**.
+  - Linux/Mac
+    ```bash
+    celery -A config worker --beat --scheduler django --loglevel=info
+    ```
+  - Windows
+    ```bash
+    celery -A config worker -l INFO -P eventlet
+    ```
+    ```bash
+    celery -A config beat -l info
+    ``` 
 - Чтобы запустить сервер разработки, выполните следующую команду:
   ```bash
   python manage.py runserver
@@ -164,6 +208,7 @@ DjangoREST/
 |   ├── models.py # модели БД
 |   ├── paginators.py # права доступа
 |   ├── seriazers.py # сериализаторы приложения
+|   ├── services.py
 |   ├── tasks # отложенные задачи
 |   ├── tests.py 
 |   ├── urls.py # маршрутизация приложения
@@ -260,6 +305,23 @@ DjangoREST/
   - reward (str): Вознаграждение за привычку
   - time_to_complete (DurationField): Время на выполнение.
   - is_public (bool): Признак, можно ли опубликовать привычку.
+
+[<- на начало](#содержание)
+
+---
+## Services chats:
+### TelegramService:
+Сервисный класс работы с Telegram
+- Методы:
+  - send_message(chat_id: int, message: str) -> None  
+    Метод отправки сообщений пользователю в телеграмм
+
+[<- на начало](#содержание)
+
+---
+## Tasks chats:
+- send_habit_reminder() -> None:  
+Отправка напоминаний о выполнении привычки
 
 [<- на начало](#содержание)
 

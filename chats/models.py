@@ -1,4 +1,7 @@
+import datetime
+
 from django.db import models
+from django.utils import timezone
 
 from config import settings
 
@@ -65,7 +68,14 @@ class Habit(models.Model):
         Строковое представление привычки
         :return: Действие: <action>. Время: <time>. Место: <place>.
         """
-        return f"Действие: {self.action}, Время: {self.time}, Место: {self.place}"
+
+        time_utc = self.time
+        # устанавливаем время для текущего часового пояса, если часовой пояс не указан устанавливаем в текущую
+        if isinstance(time_utc, datetime.datetime):
+            local_time = time_utc.astimezone(timezone.get_current_timezone())
+        else:
+            local_time = timezone.make_aware(self.time)
+        return f"Действие: {self.action}, Время: {local_time.strftime("%H:%M:%S")}, Место: {self.place}"
 
     class Meta:
         verbose_name = "привычка"
