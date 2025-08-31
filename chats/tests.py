@@ -1,8 +1,16 @@
+from datetime import timedelta
+from unittest.mock import patch, MagicMock
+
+from celery import current_app
+from django.test import TestCase
 from django.db import connection
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
 
 from chats.models import Habit
+from chats.tasks import send_habit_reminder, send_tg_message
+from config import settings
 from users.models import User
 
 
@@ -390,3 +398,66 @@ class PermChatsHabitTestCase(APITestCase):
 
         response = self.client.delete(f"/chats/habits/{self.habit_pleasant.pk}/delete/")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
+class ChatsTasksTestCase(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create(email="user1@test.com", password="user1", chat_id=2)
+        self.habit = Habit.objects.create(
+            owner=self.user,
+            place="Кухня",
+            time=timezone.now() + timedelta(minutes=30),
+            action="Приготовить смузи",
+            is_pleasant=True,
+            periodicity=1,
+            time_to_complete="00:01:30",
+            is_public=True,
+        )
+
+        current_app.conf.task_always_eager = True
+
+    @patch("chats.tasks.send_tg_message")
+    def test_send_habit_reminder(self, mock_send_tg_message: MagicMock):
+        """Тестировани отложенной задачи, напоминание о привычке"""
+        send_habit_reminder()
+
+        local_time = self.habit.time.astimezone(timezone.get_current_timezone())
+        str_habit = f"Действие: {self.habit.action}, Время: {local_time.strftime("%H:%M:%S")}, Место: {self.habit.place}"
+        message = f"У вас запланировано выполнение привычки:\n{str_habit}"
+
+        call_args = mock_send_tg_message.delay.call_args
+        self.assertIsNotNone(call_args, "mock_send_tg_message.delay was not called")
+
+        kwargs = call_args[1]
+
+        self.assertEqual(kwargs['chat_id'], self.user.chat_id)
+        self.assertEqual(kwargs['message'], message)
+
+        mock_send_tg_message.delay.assert_called_once_with(chat_id=self.user.chat_id, message=message)
+
+    @patch("requests.get")
+    def test_send_tg_message(self, mock_get: MagicMock):
+        """Тестирование отложенной задачи, отправки сообщения в ТГ"""
+
+        local_time = self.habit.time.astimezone(timezone.get_current_timezone())
+        str_habit = f"Действие: {self.habit.action}, Время: {local_time.strftime("%H:%M:%S")}, Место: {self.habit.place}"
+        message = f"У вас запланировано выполнение привычки:\n{str_habit}"
+
+        url = f"{settings.TELEGRAM_URL}{settings.BOT_TELEGRAM_TOKEN}/sendMessage"
+        params = {
+            "text": message,
+            "chat_id": self.user.chat_id,
+        }
+
+        send_tg_message(chat_id=self.user.chat_id, message=message)
+
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.text = "OK"
+
+        response = mock_get.return_value
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.text, "OK")
+
+        mock_get.assert_called_once_with(url, params=params)
+
