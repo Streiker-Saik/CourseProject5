@@ -139,6 +139,13 @@ python --version
 
 ---
 ## Запуск проекта:
+### Контейнерная сборка:
+- Запустите Docker
+- Выполните команду в терминале проекта:
+  ```bash
+  docker-compose up -d --build --force-recreate
+  ```
+### Локально:
 - Запуск обработчика очереди (worker)
   - Linux/Mac
     ```bash
