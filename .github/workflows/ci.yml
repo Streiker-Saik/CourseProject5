@@ -97,7 +97,25 @@ jobs:
       - name: Deploy to Server
         run: |
           ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << EOF
-          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+          # Экспортируем переменные (они станут доступны как $VAR_NAME)
+          export DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}
+          export GITHUB_SHA=${{ github.sha }}
+          export SECRET_KEY=${{ secrets.SECRET_KEY }}
+          export POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+          export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+          export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          export TELEGRAM_URL=${{ secrets.TELEGRAM_URL }}
+          export BOT_TELEGRAM_TOKEN=${{ secrets.BOT_TELEGRAM_TOKEN }}
+          
+          # Отладка: выводим переменные для проверки (уберите после тестов)
+          echo "DOCKER_HUB_USERNAME: $DOCKER_HUB_USERNAME"
+          echo "GITHUB_SHA: $GITHUB_SHA"
+          
+          # Пуллим образы (теперь с корректными переменными)
+          docker pull $DOCKER_HUB_USERNAME/myapp:$GITHUB_SHA
+          docker pull $DOCKER_HUB_USERNAME/mynginx:$GITHUB_SHA
+          
+          # Обновляем репозиторий
           if [ -d CourseProject5 ]; then 
             cd CourseProject5 && git pull origin feature/docker
           else
@@ -106,8 +124,12 @@ jobs:
             git checkout feature/docker
           fi
           
-          sed -i 's|build: .|image: ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}|g' docker-compose.yml
-          docker-compose pull
+          # Обновляем docker-compose.yml (теперь с корректными переменными)
+          sed -i "s|build: .|image: $DOCKER_HUB_USERNAME/myapp:$GITHUB_SHA|g" docker-compose.yml
+          
+          # Проверяем конфигурацию (для отладки)
+          docker-compose config
+          
+          # Останавливаем и запускаем (убрал --build, добавил --remove-orphans)
           docker-compose down -v || true
-          docker-compose up -f docker-compose.deploy.yml -d --build --force-recreate
-          EOF
+          docker-compos
