@@ -18,5 +18,10 @@ COPY . .
 # Открываем порт 8000 для взаимодействия с приложением
 EXPOSE 8000
 
+ARG SECRET_KEY
+ENV SECRET_KEY=${SECRET_KEY}
+
+RUN python manage.py collectstatic --noinput
+
 # Определяем команду для запуска приложения
 CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
