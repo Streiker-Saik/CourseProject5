@@ -44,7 +44,7 @@ services:
       - static_volume:/app/staticfiles
 
   nginx:
-    image: streikersaik/myapp-nginx:latest
+    image: nginx:latest
     ports:
       - "80:80"
     volumes:
