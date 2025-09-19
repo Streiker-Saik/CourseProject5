@@ -94,5 +94,14 @@ jobs:
           docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
           docker stop myapp || true
           docker rm -f myapp || true
-          docker run -d --name myapp -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+          docker run -d --name myapp -p 80:8000 \
+            -e SECRET_KEY="${{ secrets.SECRET_KEY }}" \
+            -e POSTGRES_DB="${{ secrets.POSTGRES_DB }}" \
+            -e POSTGRES_USER="${{ secrets.POSTGRES_USER }}" \
+            -e POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}" \
+            -e TELEGRAM_URL="${{ secrets.TELEGRAM_URL }}" \
+            -e BOT_TELEGRAM_TOKEN="${{ secrets.BOT_TELEGRAM_TOKEN }}" \
+            -e CELERY_BROKER_URL=redis://redis:6379/0 \
+            -e CELERY_RESULT_BACKEND=redis://redis:6379/0 \
+            ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
           EOF
