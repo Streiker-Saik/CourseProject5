@@ -132,4 +132,5 @@ jobs:
           
           # Останавливаем и запускаем (убрал --build, добавил --remove-orphans)
           docker-compose down -v || true
-          docker-compos
+          docker compose up -d --force-recreate
+
