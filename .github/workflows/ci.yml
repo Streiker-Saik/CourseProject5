@@ -103,5 +103,5 @@ jobs:
           sed -i 's|build: .|image: ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}|g' docker-compose.yml
           docker-compose pull
           docker-compose down -v || true
-          docker-compose up -f docker-compose.prod.yml -d --build --force-recreate
+          docker-compose up -f docker-compose.deploy.yml -d --build --force-recreate
           EOF

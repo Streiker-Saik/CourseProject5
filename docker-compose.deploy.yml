@@ -44,7 +44,7 @@ services:
       - static_volume:/app/staticfiles
 
   nginx:
-    image: nginx:latest
+    build: ./nginx
     ports:
       - "80:80"
     volumes:
