@@ -130,7 +130,6 @@ jobs:
           # Проверяем конфигурацию (для отладки)
           docker-compose config
           
-          # Останавливаем и запускаем (убрал --build, добавил --remove-orphans)
           docker-compose down -v || true
-          docker compose up -d --force-recreate
-
+          docker compose up -d --remove-orphans
+          EOF
