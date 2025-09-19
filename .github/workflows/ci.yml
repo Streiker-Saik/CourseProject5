@@ -100,7 +100,7 @@ jobs:
           # Экспортируем переменные (они станут доступны как $VAR_NAME)
           export DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}
           export GITHUB_SHA=${{ github.sha }}
-          export SECRET_KEY=${{ secrets.SECRET_KEY }}
+          export SECRET_KEY="${{ secrets.SECRET_KEY }}"
           export POSTGRES_DB=${{ secrets.POSTGRES_DB }}
           export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
           export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
