@@ -1,10 +1,9 @@
 from io import StringIO
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 from django.core.management import call_command
-from django.test import TestCase
-
 from django.db import connection
+from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -14,9 +13,6 @@ from users.models import User
 class UsersUserTestCase(APITestCase):
 
     def setUp(self):
-        # Сброс счетчиков до 1
-        with connection.cursor() as cursor:
-            cursor.execute("ALTER SEQUENCE users_user_id_seq RESTART WITH 1;")
         # Создание суперпользователя
         self.admin_user = User.objects.create(email="admin@test.com", password="admin", chat_id=1)
         self.admin_user.is_superuser = True
@@ -130,7 +126,7 @@ class UsersUserTestCase(APITestCase):
 
 class UserCommandsTestCase(TestCase):
 
-    @patch('sys.stdout', new_callable=StringIO)
+    @patch("sys.stdout", new_callable=StringIO)
     def test_csu(self, mock_stdout: MagicMock):
         """Тестирование команды создания суперпользователя"""
         call_command("csu")
@@ -143,14 +139,14 @@ class UserCommandsTestCase(TestCase):
         self.assertEqual(mock_stdout.getvalue(), f"Суперпользователь {email_default} создан успешно!\n")
 
     @patch("users.models.User.objects.filter")
-    @patch('sys.stdout', new_callable=StringIO)
+    @patch("sys.stdout", new_callable=StringIO)
     def test_csu_exists(self, mock_stdout: MagicMock, mock_filter: MagicMock):
         """Тестирование создание суперпользователя, если с данным email пользователь уже есть"""
         mock_filter.return_value.exists.return_value = True
         call_command("csu")
         self.assertEqual(mock_stdout.getvalue(), "Суперпользователь с данным email уже существует.\n")
 
-    @patch('sys.stdout', new_callable=StringIO)
+    @patch("sys.stdout", new_callable=StringIO)
     def test_cu(self, mock_stdout: MagicMock):
         """Тестирование команды создания пользователя"""
         email = "user@example.com"
@@ -167,7 +163,7 @@ class UserCommandsTestCase(TestCase):
         self.assertEqual(mock_stdout.getvalue(), f"Пользователь {email} создан успешно!\n")
 
     @patch("users.models.User.objects.filter")
-    @patch('sys.stdout', new_callable=StringIO)
+    @patch("sys.stdout", new_callable=StringIO)
     def test_cu_exists(self, mock_stdout: MagicMock, mock_filter: MagicMock):
         """Тестирование команды создания пользователя, если с данным email пользователь уже есть"""
         mock_filter.return_value.exists.return_value = True
