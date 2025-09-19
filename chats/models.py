@@ -75,7 +75,7 @@ class Habit(models.Model):
             local_time = time_utc.astimezone(timezone.get_current_timezone())
         else:
             local_time = timezone.make_aware(self.time)
-        return f"Действие: {self.action}, Время: {local_time.strftime("%H:%M:%S")}, Место: {self.place}"
+        return f"Действие: {self.action}, Время: {local_time.strftime('%H:%M:%S')}, Место: {self.place}"
 
     class Meta:
         verbose_name = "привычка"

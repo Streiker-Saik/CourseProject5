@@ -415,7 +415,7 @@ class ChatsTasksTestCase(TestCase):
 
         local_time = self.habit.time.astimezone(timezone.get_current_timezone())
         str_habit = (
-            f"Действие: {self.habit.action}, Время: {local_time.strftime("%H:%M:%S")}, Место: {self.habit.place}"
+            f"Действие: {self.habit.action}, Время: {local_time.strftime('%H:%M:%S')}, Место: {self.habit.place}"
         )
         message = f"У вас запланировано выполнение привычки:\n{str_habit}"
 
@@ -435,7 +435,7 @@ class ChatsTasksTestCase(TestCase):
 
         local_time = self.habit.time.astimezone(timezone.get_current_timezone())
         str_habit = (
-            f"Действие: {self.habit.action}, Время: {local_time.strftime("%H:%M:%S")}, Место: {self.habit.place}"
+            f"Действие: {self.habit.action}, Время: {local_time.strftime('%H:%M:%S')}, Место: {self.habit.place}"
         )
         message = f"У вас запланировано выполнение привычки:\n{str_habit}"
 
