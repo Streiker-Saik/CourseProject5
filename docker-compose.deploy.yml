@@ -1,6 +1,6 @@
 services:
   web:
-    image: streikersaik/myapp:latest
+    image: ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:latest
     command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
     depends_on:
       db:
@@ -24,7 +24,7 @@ services:
       - "8000:8000"
 
   migrate:
-    image: streikersaik/myapp:latest
+    image: ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:latest
     command: python manage.py migrate --noinput
     restart: "no"
     environment:
@@ -38,13 +38,13 @@ services:
         condition: service_healthy
 
   static_collector:
-    image: streikersaik/myapp:latest
+    image: ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:latest
     command: python manage.py collectstatic --noinput
     volumes:
       - static_volume:/app/staticfiles
 
   nginx:
-    build: ./nginx
+    image: ${{ secrets.DOCKER_HUB_USERNAME }}/mynginx:${{ github.sha }}
     ports:
       - "80:80"
     volumes:
@@ -79,7 +79,7 @@ services:
       retries: 5
 
   celery:
-    image: streikersaik/myapp:latest
+    image: ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:latest
     command: celery -A config worker -l INFO
     depends_on:
       db:
@@ -93,7 +93,7 @@ services:
       retries: 5
 
   celery-beat:
-    image: streikersaik/myapp:latest
+    image: ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:latest
     command: celery -A config beat -l info
     depends_on:
       db:
