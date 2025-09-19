@@ -102,11 +102,6 @@ jobs:
           export GITHUB_SHA=${{ github.sha }}
           export SECRET_KEY="${{ secrets.SECRET_KEY }}"
           
-          # Отладка: выводим переменные для проверки (уберите после тестов)
-          echo "DOCKER_HUB_USERNAME: $DOCKER_HUB_USERNAME"
-          echo "GITHUB_SHA: $GITHUB_SHA"
-          
-          # Пуллим образы (теперь с корректными переменными)
           docker pull $DOCKER_HUB_USERNAME/myapp:$GITHUB_SHA
           docker pull $DOCKER_HUB_USERNAME/mynginx:$GITHUB_SHA
           
@@ -119,11 +114,7 @@ jobs:
             git checkout feature/docker
           fi
           
-          # Обновляем docker-compose.yml (теперь с корректными переменными)
           sed -i "s|build: .|image: $DOCKER_HUB_USERNAME/myapp:$GITHUB_SHA|g" docker-compose.yml
-          
-          # Проверяем конфигурацию (для отладки)
-          docker-compose config
           
           docker-compose down -v || true
           docker-compose up -d --remove-orphans
