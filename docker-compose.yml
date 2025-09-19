@@ -18,7 +18,7 @@ services:
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/0
     volumes:
-      - .:/code
+      - .:/app
       - static_volume:/app/staticfiles
     ports:
       - "8000:8000"
