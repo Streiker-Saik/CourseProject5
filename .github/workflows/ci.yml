@@ -97,15 +97,10 @@ jobs:
       - name: Deploy to Server
         run: |
           ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << EOF
-          # Экспортируем переменные (они станут доступны как $VAR_NAME)
+
           export DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}
           export GITHUB_SHA=${{ github.sha }}
           export SECRET_KEY="${{ secrets.SECRET_KEY }}"
-          export POSTGRES_DB=${{ secrets.POSTGRES_DB }}
-          export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-          export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-          export TELEGRAM_URL=${{ secrets.TELEGRAM_URL }}
-          export BOT_TELEGRAM_TOKEN=${{ secrets.BOT_TELEGRAM_TOKEN }}
           
           # Отладка: выводим переменные для проверки (уберите после тестов)
           echo "DOCKER_HUB_USERNAME: $DOCKER_HUB_USERNAME"
@@ -131,5 +126,5 @@ jobs:
           docker-compose config
           
           docker-compose down -v || true
-          docker compose up -d --remove-orphans
+          docker-compose up -d --remove-orphans
           EOF
