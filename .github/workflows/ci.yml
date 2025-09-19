@@ -94,7 +94,7 @@ jobs:
           docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
           if [ -d CourseProject5 ]; then 
             cd CourseProject5 && git pull origin feature/docker
-          else:
+          else
             git clone git@github.com:Streiker-Saik/CourseProject5.git
             cd CourseProject5
             git checkout feature/docker
