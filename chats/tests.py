@@ -2,7 +2,6 @@ from datetime import timedelta
 from unittest.mock import MagicMock, patch
 
 from celery import current_app
-from django.db import connection
 from django.test import TestCase
 from django.utils import timezone
 from rest_framework import status

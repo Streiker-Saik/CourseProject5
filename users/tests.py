@@ -2,7 +2,6 @@ from io import StringIO
 from unittest.mock import MagicMock, patch
 
 from django.core.management import call_command
-from django.db import connection
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APITestCase
