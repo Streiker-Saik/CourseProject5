@@ -1,4 +1,5 @@
 import os
+import sys
 from datetime import timedelta
 from pathlib import Path
 
@@ -17,7 +18,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True if os.getenv("DEBUG") == "True" else False
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "84.201.154.75"]
 
 
 # Application definition
@@ -147,16 +148,16 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.User"
 
 
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:80",
-#     "http://localhost:8080",
-#     "http://127.0.0.1:9000",
-# ]
-# CSRF_TRUSTED_ORIGINS = [
-#     "http://localhost",
-#     "https://read-and-write.example.com",
-# ]
-# CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:80",
+    "http://localhost:8080",
+    "http://127.0.0.1:9000",
+]
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost",
+    "https://read-and-write.example.com",
+]
+CORS_ALLOW_ALL_ORIGINS = False
 
 TELEGRAM_URL = os.getenv("TELEGRAM_URL")
 BOT_TELEGRAM_TOKEN = os.getenv("BOT_TELEGRAM_TOKEN")
@@ -174,3 +175,11 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": timedelta(minutes=1),
     },
 }
+
+if "test" in sys.argv:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "test_db.sqlite3",
+        }
+    }

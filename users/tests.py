@@ -173,5 +173,3 @@ class UserCommandsTestCase(TestCase):
         mock_filter.return_value.exists.return_value = True
         call_command("cu")
         self.assertEqual(mock_stdout.getvalue(), "Пользователь с данным email уже существует.\n")
-
-

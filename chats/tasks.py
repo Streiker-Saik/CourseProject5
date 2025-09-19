@@ -22,6 +22,7 @@ def send_tg_message(chat_id: int, message: str) -> None:
 
     requests.get(url, params=params)
 
+
 @shared_task
 def send_habit_reminder() -> None:
     """Отправка напоминаний о выполнении привычки"""

@@ -17,10 +17,6 @@ from users.models import User
 class ChatsHabitTestCase(APITestCase):
 
     def setUp(self):
-        # Сброс счетчиков до 1
-        with connection.cursor() as cursor:
-            cursor.execute("ALTER SEQUENCE users_user_id_seq RESTART WITH 1;")
-            cursor.execute("ALTER SEQUENCE chats_habit_id_seq RESTART WITH 1;")
         # Создание обычного пользователя
         self.user = User.objects.create(email="user1@test.com", password="user1", chat_id=2)
         self.client.force_authenticate(user=self.user)
@@ -423,7 +419,11 @@ class ChatsTasksTestCase(TestCase):
         send_habit_reminder()
 
         local_time = self.habit.time.astimezone(timezone.get_current_timezone())
-        str_habit = f"Действие: {self.habit.action}, Время: {local_time.strftime("%H:%M:%S")}, Место: {self.habit.place}"
+        str_habit = (
+            f"Действие: {self.habit.action}, "
+            f"Время: {local_time.strftime("%H:%M:%S")}, "
+            f"Место: {self.habit.place}"
+        )
         message = f"У вас запланировано выполнение привычки:\n{str_habit}"
 
         call_args = mock_send_tg_message.delay.call_args
@@ -441,7 +441,11 @@ class ChatsTasksTestCase(TestCase):
         """Тестирование отложенной задачи, отправки сообщения в ТГ"""
 
         local_time = self.habit.time.astimezone(timezone.get_current_timezone())
-        str_habit = f"Действие: {self.habit.action}, Время: {local_time.strftime("%H:%M:%S")}, Место: {self.habit.place}"
+        str_habit = (
+            f"Действие: {self.habit.action}, "
+            f"Время: {local_time.strftime("%H:%M:%S")}, "
+            f"Место: {self.habit.place}"
+        )
         message = f"У вас запланировано выполнение привычки:\n{str_habit}"
 
         url = f"{settings.TELEGRAM_URL}{settings.BOT_TELEGRAM_TOKEN}/sendMessage"
@@ -460,4 +464,3 @@ class ChatsTasksTestCase(TestCase):
         self.assertEqual(response.text, "OK")
 
         mock_get.assert_called_once_with(url, params=params)
-
