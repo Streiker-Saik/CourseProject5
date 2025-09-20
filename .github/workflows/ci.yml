@@ -94,6 +94,9 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY  }}
 
+      - name: Log Docker Hub username
+        run: echo "DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}"
+
       - name: Deploy to Server
         run: |
           ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << EOF
