@@ -94,30 +94,11 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY  }}
 
-      - name: Log Docker Hub username
-        run: echo "DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}"
-
       - name: Deploy to Server
         run: |
           ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << EOF
           docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-#          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/mynginx:${{ github.sha }}
-               
           docker stop myapp || true
           docker rm -f myapp || true
           docker run -d --name myapp -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-
-#          # Обновляем репозиторий
-#          if [ -d CourseProject5 ]; then
-#            cd CourseProject5 && git pull origin feature/docker
-#          else
-#            git clone git@github.com:Streiker-Saik/CourseProject5.git
-#            cd CourseProject5
-#            git checkout feature/docker
-#          fi
-#
-#          sed -i "s|build: .|image: ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}|g" docker-compose.yml
-#          docker-compose pull
-#          docker-compose down -v || true
-#          docker-compose -f docker-compose.deploy.yml up -d --remove-orphans
           EOF
