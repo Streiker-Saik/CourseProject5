@@ -44,7 +44,7 @@ services:
       - static_volume:/app/staticfiles
 
   nginx:
-    image: ${DOCKER_HUB_USERNAME}/mynginx:latest
+    image: ./nginx
     ports:
       - "80:80"
     volumes:
