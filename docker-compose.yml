@@ -28,7 +28,7 @@ services:
     command: python manage.py migrate --noinput
     restart: "no"
     environment:
-      DJANGO_SECRET_KEY: ${SECRET_KEY}
+      SECRET_KEY: ${SECRET_KEY}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -39,6 +39,8 @@ services:
 
   static_collector:
     build: .
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
     command: python manage.py collectstatic --noinput
     volumes:
       - static_volume:/app/staticfiles
@@ -81,6 +83,8 @@ services:
   celery:
     build: .
     command: celery -A config worker -l INFO
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
     depends_on:
       db:
         condition: service_healthy
@@ -103,6 +107,7 @@ services:
       redis:
         condition: service_healthy
     environment:
+      SECRET_KEY: ${SECRET_KEY}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
