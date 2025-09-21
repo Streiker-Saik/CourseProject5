@@ -94,13 +94,18 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY  }}
 
+      - name: Copy docker-compose.prod.yml to server
+        run: |
+          scp -o StrictHostKeyChecking=no docker-compose.prod.yml ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:~/docker-compose.prod.yml
+
       - name: Deploy to Server
         run: |
           ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << EOF
-          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/mynginx:${{ github.sha }}
-          docker stop myapp || true
-          docker rm -f myapp || true
-          docker run -d --name myapp -p 80:8000 -e SECRET_KEY="${{ secrets.SECRET_KEY }}" ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-          
+          docker-compose -f docker-compose.prod.yml pull
+          docker-compose -f docker-compose.prod.yml up -d --remove-orphans
+#          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+#          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/mynginx:${{ github.sha }}
+#          docker stop myapp || true
+#          docker rm -f myapp || true
+#          docker run -d --name myapp -p 80:8000 -e SECRET_KEY="${{ secrets.SECRET_KEY }}" ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
           EOF
