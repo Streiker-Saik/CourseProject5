@@ -110,8 +110,8 @@ jobs:
           ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << EOF
           export DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}
           export GITHUB_SHA=${{ github.sha }}
-          echo "DOCKER_HUB_USERNAME=$DOCKER_HUB_USERNAME"
-          echo "GITHUB_SHA=$GITHUB_SHA"
+          docker stop \$(docker ps -q)
+          docker rm \$(docker ps -a -q)
           docker-compose -f docker-compose.prod.yml pull
           docker-compose -f docker-compose.prod.yml up -d --remove-orphans
           EOF
