@@ -94,6 +94,9 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY  }}
 
+      - name: Verify files
+        run: ls -l
+
       - name: Copy docker-compose.prod.yml to server
         run: |
           scp -o StrictHostKeyChecking=no docker-compose.prod.yml ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:~/docker-compose.prod.yml
