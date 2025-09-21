@@ -85,6 +85,8 @@ services:
     command: celery -A config worker -l INFO
     environment:
       SECRET_KEY: ${SECRET_KEY}
+      REDIS_HOST: redis
+      POSTGRES_HOST: db
     depends_on:
       db:
         condition: service_healthy
@@ -112,6 +114,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_HOST: db
+      REDIS_HOST: redis
     healthcheck:
       test: celery -A config inspect ping
       interval: 10s
