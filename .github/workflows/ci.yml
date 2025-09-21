@@ -103,9 +103,4 @@ jobs:
           ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << EOF
           docker-compose -f docker-compose.prod.yml pull
           docker-compose -f docker-compose.prod.yml up -d --remove-orphans
-#          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
-#          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/mynginx:${{ github.sha }}
-#          docker stop myapp || true
-#          docker rm -f myapp || true
-#          docker run -d --name myapp -p 80:8000 -e SECRET_KEY="${{ secrets.SECRET_KEY }}" ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
           EOF
