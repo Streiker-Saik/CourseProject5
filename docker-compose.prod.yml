@@ -48,7 +48,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx.conf:/etc/nginx/nginx.conf
       - static_volume:/app/staticfiles #/usr/share/nginx/html/static/
     depends_on:
       web:

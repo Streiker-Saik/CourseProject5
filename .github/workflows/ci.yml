@@ -101,6 +101,10 @@ jobs:
         run: |
           scp -o StrictHostKeyChecking=no docker-compose.prod.yml ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:~/docker-compose.prod.yml
 
+      - name: Copy nginx.conf to server
+        run: |
+          scp -o StrictHostKeyChecking=no nginx.conf ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:~/nginx.conf
+
       - name: Deploy to Server
         run: |
           ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << EOF
