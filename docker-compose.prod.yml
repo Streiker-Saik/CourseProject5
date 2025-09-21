@@ -18,17 +18,14 @@ services:
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/0
     volumes:
-      - .:/app
       - static_volume:/app/staticfiles
-    ports:
-      - "8000:8000"
 
   migrate:
     image: ${DOCKER_HUB_USERNAME}/myapp:${GITHUB_SHA}
     command: python manage.py migrate --noinput
     restart: "no"
     environment:
-      DJANGO_SECRET_KEY: ${SECRET_KEY}
+      SECRET_KEY: ${SECRET_KEY}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -40,6 +37,8 @@ services:
   static_collector:
     image: ${DOCKER_HUB_USERNAME}/myapp:${GITHUB_SHA}
     command: python manage.py collectstatic --noinput
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
     volumes:
       - static_volume:/app/staticfiles
 
@@ -81,6 +80,10 @@ services:
   celery:
     image: ${DOCKER_HUB_USERNAME}/myapp:${GITHUB_SHA}
     command: celery -A config worker -l INFO
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      REDIS_HOST: redis
+      POSTGRES_HOST: db
     depends_on:
       db:
         condition: service_healthy
@@ -103,6 +106,7 @@ services:
       redis:
         condition: service_healthy
     environment:
+      SECRET_KEY: ${SECRET_KEY}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
