@@ -94,8 +94,8 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY  }}
 
-      - name: Verify files
-        run: ls -l
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Copy docker-compose.prod.yml to server
         run: |
