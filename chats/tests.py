@@ -1,9 +1,8 @@
 from datetime import timedelta
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 from celery import current_app
 from django.test import TestCase
-from django.db import connection
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -17,10 +16,6 @@ from users.models import User
 class ChatsHabitTestCase(APITestCase):
 
     def setUp(self):
-        # Сброс счетчиков до 1
-        with connection.cursor() as cursor:
-            cursor.execute("ALTER SEQUENCE users_user_id_seq RESTART WITH 1;")
-            cursor.execute("ALTER SEQUENCE chats_habit_id_seq RESTART WITH 1;")
         # Создание обычного пользователя
         self.user = User.objects.create(email="user1@test.com", password="user1", chat_id=2)
         self.client.force_authenticate(user=self.user)
@@ -31,7 +26,7 @@ class ChatsHabitTestCase(APITestCase):
             action="Приготовить смузи",
             is_pleasant=True,
             periodicity=1,
-            time_to_complete="00:01:30",
+            time_to_complete=timedelta(hours=0, minutes=1, seconds=30),
             is_public=True,
         )
         self.habit_and_related_habit = Habit.objects.create(
@@ -41,7 +36,7 @@ class ChatsHabitTestCase(APITestCase):
             action="Провести утреннюю зарядку",
             related_habit=self.habit_pleasant,
             periodicity=1,
-            time_to_complete="00:02:00",
+            time_to_complete=timedelta(hours=0, minutes=2, seconds=0),
             is_public=True,
         )
         self.habit_and_reward = Habit.objects.create(
@@ -51,7 +46,7 @@ class ChatsHabitTestCase(APITestCase):
             action="Сделать перерыв на разминку",
             periodicity=1,
             reward="Чаша любимого супа на обед",
-            time_to_complete="00:01:00",
+            time_to_complete=timedelta(hours=0, minutes=1, seconds=0),
         )
 
     def test_list_habit_public(self) -> None:
@@ -343,10 +338,6 @@ class ChatsHabitTestCase(APITestCase):
 class PermChatsHabitTestCase(APITestCase):
 
     def setUp(self):
-        # Сброс счетчиков до 1
-        with connection.cursor() as cursor:
-            cursor.execute("ALTER SEQUENCE users_user_id_seq RESTART WITH 1;")
-            cursor.execute("ALTER SEQUENCE chats_habit_id_seq RESTART WITH 1;")
         # Создание обычного пользователя
         self.user = User.objects.create(email="user1@test.com", password="user1", chat_id=2)
 
@@ -357,7 +348,7 @@ class PermChatsHabitTestCase(APITestCase):
             action="Приготовить смузи",
             is_pleasant=True,
             periodicity=1,
-            time_to_complete="00:01:30",
+            time_to_complete=timedelta(hours=0, minutes=1, seconds=30),
             is_public=False,
         )
 
@@ -411,7 +402,7 @@ class ChatsTasksTestCase(TestCase):
             action="Приготовить смузи",
             is_pleasant=True,
             periodicity=1,
-            time_to_complete="00:01:30",
+            time_to_complete=timedelta(hours=0, minutes=1, seconds=30),
             is_public=True,
         )
 
@@ -423,7 +414,9 @@ class ChatsTasksTestCase(TestCase):
         send_habit_reminder()
 
         local_time = self.habit.time.astimezone(timezone.get_current_timezone())
-        str_habit = f"Действие: {self.habit.action}, Время: {local_time.strftime("%H:%M:%S")}, Место: {self.habit.place}"
+        str_habit = (
+            f"Действие: {self.habit.action}, Время: {local_time.strftime('%H:%M:%S')}, Место: {self.habit.place}"
+        )
         message = f"У вас запланировано выполнение привычки:\n{str_habit}"
 
         call_args = mock_send_tg_message.delay.call_args
@@ -431,8 +424,8 @@ class ChatsTasksTestCase(TestCase):
 
         kwargs = call_args[1]
 
-        self.assertEqual(kwargs['chat_id'], self.user.chat_id)
-        self.assertEqual(kwargs['message'], message)
+        self.assertEqual(kwargs["chat_id"], self.user.chat_id)
+        self.assertEqual(kwargs["message"], message)
 
         mock_send_tg_message.delay.assert_called_once_with(chat_id=self.user.chat_id, message=message)
 
@@ -441,7 +434,9 @@ class ChatsTasksTestCase(TestCase):
         """Тестирование отложенной задачи, отправки сообщения в ТГ"""
 
         local_time = self.habit.time.astimezone(timezone.get_current_timezone())
-        str_habit = f"Действие: {self.habit.action}, Время: {local_time.strftime("%H:%M:%S")}, Место: {self.habit.place}"
+        str_habit = (
+            f"Действие: {self.habit.action}, Время: {local_time.strftime('%H:%M:%S')}, Место: {self.habit.place}"
+        )
         message = f"У вас запланировано выполнение привычки:\n{str_habit}"
 
         url = f"{settings.TELEGRAM_URL}{settings.BOT_TELEGRAM_TOKEN}/sendMessage"
@@ -460,4 +455,3 @@ class ChatsTasksTestCase(TestCase):
         self.assertEqual(response.text, "OK")
 
         mock_get.assert_called_once_with(url, params=params)
-

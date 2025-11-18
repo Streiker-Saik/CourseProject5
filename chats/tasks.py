@@ -22,6 +22,7 @@ def send_tg_message(chat_id: int, message: str) -> None:
 
     requests.get(url, params=params)
 
+
 @shared_task
 def send_habit_reminder() -> None:
     """Отправка напоминаний о выполнении привычки"""
@@ -30,10 +31,11 @@ def send_habit_reminder() -> None:
     time_now = timezone.now()
     logger.info(f"Текущее время {time_now}")
     # Фильтруем привычки, которые от(включительно) текущего времени и до + час
-    habits = Habit.objects.select_related("owner").filter(
-        time__gte=time_now,
-        time__lte=time_now + datetime.timedelta(hours=1)
-    ).exclude(owner__chat_id__isnull=True)
+    habits = (
+        Habit.objects.select_related("owner")
+        .filter(time__gte=time_now, time__lte=time_now + datetime.timedelta(hours=1))
+        .exclude(owner__chat_id__isnull=True)
+    )
     logger.info(f"Привычек в этом часу: {len(habits)}")
 
     for habit in habits.order_by("time"):
