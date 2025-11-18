@@ -87,7 +87,7 @@ python --version
 ## Установка:
 - Клонируйте репозиторий:
     ```bash
-    git clone git@github.com:Streiker-Saik/CourseProject5.git
+    git clone git@github.com:Streiker-Saik/Habit_Tracker.git
     ```
 - Перейдите в директорию проекта:
     ```
